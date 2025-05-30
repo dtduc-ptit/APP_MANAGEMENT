@@ -92,13 +92,24 @@
 | POST       | /api/seeder/projects  | Seed dữ liệu dự án      | 
 | POST       | /api/seeder/tickets   | Seed dữ liệu ticket     | 
 
+## API Documentation
+
+Tài liệu API được viết theo chuẩn [OpenAPI 3.0](https://swagger.io/specification/).
+
+- `docs/api-specs/users.yaml`: Tài liệu tổng hợp API của người dùng
+- `docs/api-specs/projects.yaml`: Tài liệu tổng hợp API của dự án
+- `docs/api-specs/tickets.yaml`: Tài liệu tổng hợp API của ticket
+- `docs/api-specs/exported-postman.json`: Tài liệu export từ Postman 
+
+Bạn có thể xem trực quan bằng cách import file YAML hoặc JSON này vào Swagger UI: https://editor.swagger.io/
+
 ## Cài đặt và khởi chạy
 
 ### Clone Repository
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+git clone https://github.com/dtduc-ptit/APP_MANAGEMENT.git
+cd APP_MANAGEMENT
 
 ```
 

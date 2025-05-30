@@ -1,0 +1,258 @@
+openapi: 3.0.3
+info:
+  title: Ticket API
+  description: API quản lý thông tin vé (ticket) trong hệ thống.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000/api'
+    description: Server chính của API
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID duy nhất của vé
+          example: 1
+        ticketCode:
+          type: string
+          description: Mã vé duy nhất
+          example: TK1a
+        title:
+          type: string
+          description: Tiêu đề của vé
+          example: bibo thesis bis
+          maxLength: 120
+        description:
+          type: string
+          description: Mô tả chi tiết của vé
+          example: Candidus suasoria contra arcesso curtus amo.
+          maxLength: 5000
+        deadline:
+          type: string
+          format: date
+          description: Ngày hết hạn của vé
+          example: 2025-04-04
+        status:
+          type: string
+          enum: [TODO, INPROGRESS, DONE]
+          description: Trạng thái của vé
+          example: DONE
+        assign:
+          type: object
+          description: Người dùng được gán vé
+          nullable: true
+          properties:
+            id:
+              type: integer
+              description: ID của người dùng được gán
+              example: 101
+        project:
+          type: object
+          description: Dự án liên quan đến vé
+          nullable: true
+          properties:
+            id:
+              type: integer
+              description: ID của dự án
+              example: 100
+      required:
+        - id
+        - ticketCode
+        - title
+        - description
+        - deadline
+        - status
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Thông báo lỗi
+          example: Không tìm thấy vé
+      required:
+        - message
+paths:
+  /tickets:
+    get:
+      summary: Lấy danh sách vé
+      description: Lấy danh sách tất cả các vé trong hệ thống.
+      operationId: getTickets
+      responses:
+        '200':
+          description: Thành công, trả về danh sách vé
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Yêu cầu không hợp lệ
+          content:
+            application/json:
+              schema:
+               率先
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Tạo vé mới
+      description: Tạo một vé mới với thông tin được cung cấp.
+      operationId: createTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticketCode:
+                  type: string
+                  description: Mã vé duy nhất
+                  example: TK1a
+                title:
+                  type: string
+                  description: Tiêu đề của vé
+                  example: bibo thesis bis
+                  maxLength: 120
+                description:
+                  type: string
+                  description: Mô tả chi tiết của vé
+                  example: Candidus suasoria contra arcesso curtus amo.
+                  maxLength: 5000
+                deadline:
+                  type: string
+                  format: date
+                  description: Ngày hết hạn của vé
+                  example: 2025-04-04
+                status:
+                  type: string
+                  enum: [TODO, INPROGRESS, DONE]
+                  description: Trạng thái của vé
+                  example: DONE
+                assignId:
+                  type: integer
+                  description: ID của người dùng được gán
+                  example: 101
+                  nullable: true
+                projectId:
+                  type: integer
+                  description: ID của dự án liên quan
+                  example: 100
+                  nullable: true
+              required:
+                - ticketCode
+                - title
+                - description
+                - deadline
+                - status
+      responses:
+        '201':
+          description: Tạo vé thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Yêu cầu không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /tickets/{ticketId}:
+    patch:
+      summary: Cập nhật thông tin vé
+      description: Cập nhật thông tin của một vé dựa trên ID.
+      operationId: updateTicket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của vé cần cập nhật
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticketCode:
+                  type: string
+                  description: Mã vé mới
+                  example: TK1a
+                title:
+                  type: string
+                  description: Tiêu đề mới của vé
+                  example: bibo thesis bis
+                  maxLength: 120
+                description:
+                  type: string
+                  description: Mô tả mới của vé
+                  example: Candidus suasoria contra arcesso curtus amo4wtgeg.
+                  maxLength: 5000
+                deadline:
+                  type: string
+                  format: date
+                  description: Ngày hết hạn mới
+                  example: 2025-04-04
+                status:
+                  type: string
+                  enum: [TODO, INPROGRESS, DONE]
+                  description: Trạng thái mới của vé
+                  example: DONE
+                assignId:
+                  type: integer
+                  description: ID mới của người dùng được gán
+                  example: 101
+                  nullable: true
+                projectId:
+                  type: integer
+                  description: ID mới của dự án liên quan
+                  example: 100
+                  nullable: true
+      responses:
+        '200':
+          description: Cập nhật vé thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Yêu cầu không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Không tìm thấy vé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /tickets/export:
+    get:
+      summary: Xuất danh sách vé ra file CSV
+      description: Xuất danh sách tất cả các vé dưới định dạng file CSV.
+      operationId: exportTicketsToCsv
+      responses:
+        '200':
+          description: Xuất file CSV thành công
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+                description: File CSV chứa danh sách vé
+        '400':
+          description: Yêu cầu không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
