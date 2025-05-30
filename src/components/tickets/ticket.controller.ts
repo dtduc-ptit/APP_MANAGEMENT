@@ -1,0 +1,32 @@
+import { Body, Controller, Get, Param, Post, Put, Query, ParseIntPipe, ParseDatePipe,ValidationPipe, Res, Patch, UseGuards} from "@nestjs/common";
+import { TicketService } from "./ticket.service";
+import { CreateTicketDto } from "../../common/dto/create-ticket.dto";
+import { Response } from 'express';
+import { UpdateTicketDto } from "src/common/dto/update-ticket.dto";
+import { JwtAuthGuard } from "../auth/auth.guard";
+
+@UseGuards(JwtAuthGuard)
+@Controller('api/tickets')
+export class TicketController {
+    constructor(private readonly ticketService: TicketService) {}
+
+    @Get()
+    async getTickets(@Query('limit') limit=10, @Query('page') page=1 ) {
+        return this.ticketService.getTickets(limit, page);
+    }
+
+    @Get('/export')
+    async exportTicketsCsv(@Res() res: Response){
+        return this.ticketService.getTicketsCsv(res);
+    }
+
+    @Post()
+    async createTicket(@Body(ValidationPipe) createTicketDto: CreateTicketDto) {
+        return this.ticketService.createTicket(createTicketDto);
+    }
+
+    @Patch('/:id')
+    async updateTicket(@Param('id') id: number, @Body(ValidationPipe) updateTicketDto: UpdateTicketDto) {
+        return this.ticketService.updateTicket(id, updateTicketDto);
+    }
+}  
