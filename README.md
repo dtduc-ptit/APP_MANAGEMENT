@@ -63,6 +63,7 @@
 | PATCH      | /api/users/:id                    | Cập nhật thông tin người dùng     | 
 | PATCH      | /api/users/:id/password           | Đổi mật khẩu người dùng           | 
 | PUT        | /api/users/:id/tickets            | Gán ticket cho người dùng         | 
+| DELETE     | /api/users/:id/           | Xóa người dùng         | 
 
 ### Projects (`/api/projects`)
 
@@ -80,9 +81,10 @@
 | Phương thức | Endpoint               | Mô tả                          |
 |------------|------------------------|--------------------------------|
 | GET        | /api/tickets           | Lấy tất cả ticket              | 
-| GET        | /api/tickets/export    | Xuất ticket (ví dụ: CSV)       | 
+| GET        | /api/tickets/export    | Xuất ticket sang file CSV      | 
 | POST       | /api/tickets           | Tạo ticket mới                 | 
 | PATCH      | /api/tickets/:id       | Cập nhật thông tin ticket      | 
+| DELETE     | /api/tickets/:id       | Xóa ticket                     | 
 
 ### Seeder (`/api/seeder`)
 

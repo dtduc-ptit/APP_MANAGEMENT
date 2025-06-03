@@ -30,6 +30,14 @@ export class TicketService {
         return tickets;
     }
 
+    async getTicketById(id: number): Promise<Ticket> {
+        const ticket = await this.ticketRepository.findOne({ where: { id }});
+        if (!ticket) {
+            throw new NotFoundException(`Ticket with id ${id} not found`);
+        }
+        return ticket;
+    }
+
     async createTicket(createTicketDto: CreateTicketDto) {
         const ticket = this.ticketRepository.create(createTicketDto);
         if (createTicketDto.projectId) {
@@ -98,6 +106,14 @@ export class TicketService {
         res.attachment('users.csv');
         res.send(csvData);
         console.timeEnd('CSV generation time');
+    }
+
+    async deleteTicket(id: number): Promise<void> {
+        const ticket = await this.ticketRepository.findOne({ where: { id } });
+        if (!ticket) {
+            throw new NotFoundException(`Ticket with id ${id} not found`);
+        }
+        await this.ticketRepository.remove(ticket);
     }
 
 }

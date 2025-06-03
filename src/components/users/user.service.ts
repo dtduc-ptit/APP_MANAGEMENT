@@ -133,6 +133,15 @@ export class UserService {
     
         return tickets;
     }
+
+    async deleteUser(id: number) {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        await this.userRepository.delete(id);
+        return { message: `User with ID ${id} deleted successfully` };
+    }
     
 }
 

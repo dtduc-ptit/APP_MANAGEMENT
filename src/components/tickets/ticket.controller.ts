@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, ParseIntPipe, ParseDatePipe,ValidationPipe, Res, Patch, UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Query, ParseIntPipe, ParseDatePipe,ValidationPipe, Res, Patch, UseGuards, Delete} from "@nestjs/common";
 import { TicketService } from "./ticket.service";
 import { CreateTicketDto } from "../../common/dto/create-ticket.dto";
 import { Response } from 'express';
@@ -15,6 +15,11 @@ export class TicketController {
         return this.ticketService.getTickets(limit, page);
     }
 
+    @Get("/:id")
+    async getTicketById(@Param('id', ParseIntPipe) id: number) {
+        return this.ticketService.getTicketById(id);
+    }
+
     @Get('/export')
     async exportTicketsCsv(@Res() res: Response){
         return this.ticketService.getTicketsCsv(res);
@@ -28,5 +33,10 @@ export class TicketController {
     @Patch('/:id')
     async updateTicket(@Param('id') id: number, @Body(ValidationPipe) updateTicketDto: UpdateTicketDto) {
         return this.ticketService.updateTicket(id, updateTicketDto);
+    }
+
+    @Delete('/:id')
+    async deleteTicket(@Param('id', ParseIntPipe) id: number) {
+        return this.ticketService.deleteTicket(id);
     }
 }  

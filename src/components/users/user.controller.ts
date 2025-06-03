@@ -10,6 +10,7 @@ import {
     ValidationPipe,
     ParseIntPipe,
     UseGuards,
+    Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../../common/dto/create-user.dto';
@@ -74,5 +75,10 @@ import { JwtAuthGuard } from '../auth/auth.guard';
     @Put('/:id/tickets')
     async assignTicketToUser(@Param('id') id : number,@Body() assignTicketDto: AssignTicketDto){
         return this.userService.assignTicketToUser(id, assignTicketDto.ticketId)
+    }
+
+    @Delete(':id')
+    async deleteUser(@Param('id') id: number) {
+        return this.userService.deleteUser(id);
     }
 }
