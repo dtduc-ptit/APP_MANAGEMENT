@@ -69,6 +69,55 @@ components:
         - description
         - deadline
         - status
+    TicketCountByUserReport:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: ID của người dùng
+          example: 124
+        ticketCount:
+          type: integer
+          description: Số lượng vé được gán cho người dùng
+          example: 8
+      required:
+        - userId
+        - ticketCount
+    PaginatedTicketCountByUserResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketCountByUserReport'
+          description: Danh sách số lượng vé theo người dùng
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Tổng số người dùng có vé
+              example: 9812
+            currentPage:
+              type: integer
+              description: Trang hiện tại
+              example: 1
+            limit:
+              type: integer
+              description: Số lượng bản ghi trên mỗi trang
+              example: 5
+            totalPages:
+              type: integer
+              description: Tổng số trang
+              example: 1963
+          required:
+            - total
+            - currentPage
+            - limit
+            - totalPages
+      required:
+        - data
+        - meta
     Error:
       type: object
       properties:
@@ -98,7 +147,6 @@ paths:
           content:
             application/json:
               schema:
-               率先
                 $ref: '#/components/schemas/Error'
     post:
       summary: Tạo vé mới
@@ -250,6 +298,47 @@ paths:
                 type: string
                 format: binary
                 description: File CSV chứa danh sách vé
+        '400':
+          description: Yêu cầu không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /tickets/reports/ticket-count-by-user:
+    get:
+      summary: Lấy số lượng vé theo người dùng
+      description: Lấy số lượng vé được gán cho từng người dùng, với tùy chọn lọc theo trạng thái và phân trang.
+      operationId: getTicketCountByUser
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [TODO, INPROGRESS, DONE]
+          description: Trạng thái của vé để lọc
+          example: INPROGRESS
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Số lượng bản ghi trên mỗi trang
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: Số trang hiện tại
+      responses:
+        '200':
+          description: Thành công, trả về danh sách số lượng vé theo người dùng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTicketCountByUserResponse'
         '400':
           description: Yêu cầu không hợp lệ
           content:

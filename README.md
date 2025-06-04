@@ -72,6 +72,8 @@
 | GET        | /api/projects/:id                | Lấy thông tin dự án theo ID      | 
 | GET        | /api/projects                    | Lấy tất cả dự án                 | 
 | GET        | /api/projects/:id/tickets        | Lấy ticket trong dự án           | 
+| GET        | /api/projects/filter             | Lọc dự án theo doanh thu hoặc ngày bắt đầu           | 
+| GET        | /api/projects/reports/ticket-count  | Lấy số lượng ticket theo dự án        | 
 | POST       | /api/projects                    | Tạo dự án mới                    | 
 | PATCH      | /api/projects/:id                | Cập nhật thông tin dự án         | 
 | DELETE     | /api/projects/:id                | Xóa dự án                        | 
@@ -82,6 +84,7 @@
 |------------|------------------------|--------------------------------|
 | GET        | /api/tickets           | Lấy tất cả ticket              | 
 | GET        | /api/tickets/export    | Xuất ticket sang file CSV      | 
+| GET        | /api/tickets/reports/ticket-count-by-user  | Lấy số lượng ticket theo người dùng     | 
 | POST       | /api/tickets           | Tạo ticket mới                 | 
 | PATCH      | /api/tickets/:id       | Cập nhật thông tin ticket      | 
 | DELETE     | /api/tickets/:id       | Xóa ticket                     | 
