@@ -20,7 +20,7 @@ export class AuthService {
         }
         const payload = {sub: user.id, username: user.username};
 
-        const access_token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+        const access_token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
         const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
 
         return { access_token, refresh_token };
@@ -40,7 +40,7 @@ export class AuthService {
     async refreshToken(refresh_token: string): Promise<{access_token: string}>{
         try {
             const payload = await this.jwtService.verifyAsync(refresh_token);
-            const newAccessToken = await this.jwtService.signAsync({ sub: payload.sub, username: payload.username }, { expiresIn: '15m' });
+            const newAccessToken = await this.jwtService.signAsync({ sub: payload.sub, username: payload.username }, { expiresIn: '1h' });
         
             return { access_token: newAccessToken };
           } catch (err) {

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entities";
 import { Ticket } from "./ticket.entities";
 import { IsDate, IsString } from "class-validator";
@@ -18,6 +18,7 @@ export class Project {
     @IsString()
     name: string;
 
+    @Index()
     @Column({ nullable: true })
     @IsDate()
     startDate: Date;
@@ -31,7 +32,8 @@ export class Project {
         enum: ProjectType
     })
     projectType: ProjectType;
-
+    
+    @Index()
     @Column({ nullable: true })
     profit: number;
 

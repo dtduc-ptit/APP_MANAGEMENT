@@ -116,4 +116,37 @@ export class TicketService {
         await this.ticketRepository.remove(ticket);
     }
 
+    async getTicketCountByUser(limit = 10, page = 1, status: TicketStatus) {
+        const safeLimit = Math.min(Number(limit) || 10, 100);
+        const safePage = Math.max(Number(page) || 1, 1);
+        const skip = safeLimit * (safePage - 1);
+
+        const rawQuery = this.ticketRepository
+            .createQueryBuilder('ticket')
+            .leftJoin('ticket.assign', 'user')
+            .select('user.id', 'userId')
+            .addSelect('COUNT(ticket.id)', 'ticketCount')
+            .where('ticket.assignId IS NOT NULL')
+            .andWhere('ticket.status = :status', { status })
+            .groupBy('user.id')
+            .orderBy('ticketCount', 'DESC');
+
+        const fullData = await rawQuery.getRawMany();
+
+        const paginated = fullData.slice(skip, skip + safeLimit);
+
+        return {
+            data: paginated.map(item => ({
+                ...item,
+                ticketCount: Number(item.ticketCount),
+            })),
+            meta: {
+                total: fullData.length,
+                currentPage: safePage,
+                limit: safeLimit,
+                totalPages: Math.ceil(fullData.length / safeLimit),
+            }
+        };
+    }
+
 }

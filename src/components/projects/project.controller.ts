@@ -9,7 +9,17 @@ import { JwtAuthGuard } from "../auth/auth.guard";
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) {}
 
-    @Get('/:id')
+    @Get('filter')
+    async filterProjects(
+        @Query('limit') limit = 10, 
+        @Query('page') page = 1, 
+        @Query('startDate', new ParseDatePipe({optional: true})) startDate?: Date,
+        @Query('profit', ParseIntPipe) profit?: number,
+    ) {
+        return this.projectService.filterProjects(limit, page, startDate, profit);
+    }
+
+    @Get(':id')
     getProjectById(@Param('id', ParseIntPipe) id: number){
         return this.projectService.getProjectById(id);
     }
@@ -17,14 +27,14 @@ export class ProjectController {
     @Get()
     getProjects(
         @Query('limit') limit = 10, 
-        @Query('page' ) page = 1, 
+        @Query('page') page = 1, 
         @Query('name') projectName? : string, 
-        @Query('projectType') projectType? : string) 
-        {
+        @Query('projectType') projectType? : string
+    ) {
         return this.projectService.getProjects(limit, page, projectName,projectType);
     }
 
-    @Get('/:id/tickets')
+    @Get(':id/tickets')
     async getTickets(
         @Param('id', ParseIntPipe) id: number,
         @Query('deadline', new ParseDatePipe({optional: true})) ticketDeadline?: Date,
@@ -39,13 +49,22 @@ export class ProjectController {
         return this.projectService.createProject(createProjectDto);
     }
     
-    @Patch('/:id')
+    @Patch(':id')
     updateProject(@Param('id') id: number, @Body() updateProjectDto: UpdateProjectDto) {
         return this.projectService.updateProject(id, updateProjectDto);
     }
 
-    @Delete('/:id')
+    @Delete(':id')
     deleteProject(@Param('id', ParseIntPipe) id: number){
         return this.projectService.deleteProject(id);
     }
+
+    @Get('reports/ticket-count')
+    async getTicketCountByProject(
+        @Query('limit') limit = 10,
+        @Query('page') page = 1,
+    ) {
+        return this.projectService.getTicketCountByProject(limit, page);
+    }
+
 } 

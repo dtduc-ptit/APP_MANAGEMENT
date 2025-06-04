@@ -98,4 +98,71 @@ export class ProjectService {
         return {message: 'Xóa project thành công!'}
     }
 
+    async filterProjects(limit: number, page: number, startDate?: Date, profit?: number) {
+        console.time('filterProjects');
+        const skip = limit * (page - 1);
+        try {
+            const query = this.projectRepository
+                .createQueryBuilder('project')
+                .take(limit)
+                .skip(skip);
+
+            if (startDate) {
+                query.andWhere('project.startDate >= :startDate', { startDate });
+            }
+
+            if (profit !== undefined) {
+                query.andWhere('project.profit >= :profit', { profit });
+            }
+
+            query.orderBy('project.profit', 'DESC');
+
+            const projects = await query.getMany();
+
+            console.timeEnd('filterProjects');
+
+            if (!projects.length) {
+                throw new NotFoundException('Không tìm thấy dự án nào phù hợp với điều kiện.');
+            }
+
+            return projects;
+        } catch (error) {
+            console.timeEnd('filterProjects');
+            console.error(error);
+            throw new InternalServerErrorException('Lỗi truy vấn');
+        }
+    }
+
+    async getTicketCountByProject(limit: number, page: number) {
+        const safeLimit = Math.min(Number(limit) || 10, 100);
+        const safePage = Math.max(Number(page) || 1, 1);
+        const skip = safeLimit * (safePage - 1);
+
+        const rawQuery = this.projectRepository
+            .createQueryBuilder('project')
+            .leftJoin('project.ticket', 'ticket')
+            .select('project.id', 'projectId')
+            .addSelect('project.name', 'projectName')
+            .addSelect('COUNT(ticket.id)', 'ticketCount')
+            .groupBy('project.id')
+            .orderBy('ticketCount', 'DESC');
+
+        const fullData = await rawQuery.getRawMany();
+
+        const paginated = fullData.slice(skip, skip + safeLimit);
+
+        return {
+            data: paginated.map(item => ({
+                ...item,
+                ticketCount: Number(item.ticketCount),
+            })),
+            meta: {
+                total: fullData.length,
+                currentPage: safePage,
+                limit: safeLimit,
+                totalPages: Math.ceil(fullData.length / safeLimit),
+            }
+        };
+    }
+
 }

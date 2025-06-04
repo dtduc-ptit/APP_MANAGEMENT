@@ -4,6 +4,7 @@ import { CreateTicketDto } from "../../common/dto/create-ticket.dto";
 import { Response } from 'express';
 import { UpdateTicketDto } from "src/common/dto/update-ticket.dto";
 import { JwtAuthGuard } from "../auth/auth.guard";
+import { TicketStatus } from "../../common/entities/ticket.entities";
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/tickets')
@@ -13,6 +14,15 @@ export class TicketController {
     @Get()
     async getTickets(@Query('limit') limit=10, @Query('page') page=1 ) {
         return this.ticketService.getTickets(limit, page);
+    }
+
+    @Get('reports/ticket-count-by-user')
+    async getTicketCountByUser(
+        @Query('limit') limit = 10,
+        @Query('page') page = 1,
+        @Query('status') status: TicketStatus
+    ) {
+        return this.ticketService.getTicketCountByUser(limit, page, status);
     }
 
     @Get("/:id")
