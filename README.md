@@ -24,6 +24,7 @@
 │ │ └── seeder                # Script để seed dữ liệu
 │ ├── components
 │ │ ├── auth                  # Module xác thực (JWT, session)
+│ │ ├── middleware            # Triển khai middleware ghi log request
 │ │ ├── projects              # Logic và controller liên quan đến dự án
 │ │ ├── tickets               # Logic và controller liên quan đến ticket
 │ │ └── users                 # Logic và controller liên quan đến người dùng
