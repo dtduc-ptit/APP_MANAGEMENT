@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Query, ParseIntPipe, ParseDate
 import { TicketService } from "./ticket.service";
 import { CreateTicketDto } from "../../common/dto/create-ticket.dto";
 import { Response } from 'express';
-import { UpdateTicketDto } from "src/common/dto/update-ticket.dto";
+import { UpdateTicketDto } from "../../common/dto/update-ticket.dto";
 import { JwtAuthGuard } from "../auth/auth.guard";
 import { TicketStatus } from "../../common/entities/ticket.entities";
 

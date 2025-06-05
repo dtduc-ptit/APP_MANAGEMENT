@@ -130,3 +130,14 @@ npm install
 npm run start:dev
 
 ```
+## Khởi chạy ứng dụng bằng Docker Compose
+
+```bash
+docker-compose up --build
+
+```
+
+## Kiểm tra kết nối
+
+- API: http://localhost:3000
+- MySQL: Kết nối đến localhost:3306 (Chú ý cần setup lại phần kết nối với MySQL đúng với DB của bạn)

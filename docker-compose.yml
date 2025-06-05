@@ -1,0 +1,12 @@
+services:      
+  backend:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=141203
+      - DB_NAME=app_database
