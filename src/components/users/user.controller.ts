@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '../auth/auth.guard';
     constructor(private readonly userService: UserService) {}
 
     @Get(':id') 
-    getUserById(@Param('id') id: number) {
+    getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUserById(id);
     }
 
@@ -35,8 +35,8 @@ import { JwtAuthGuard } from '../auth/auth.guard';
 
     @Get()
     async getUsers(
-        @Query('limit') limit = 20,
-        @Query('page') page = 1,
+        @Query('limit', new ParseIntPipe({optional: true})) limit = 20,
+        @Query('page', new ParseIntPipe({optional: true})) page = 1,
         @Query('name') name?: string,
         @Query('username') username?: string
     ) {
@@ -55,7 +55,7 @@ import { JwtAuthGuard } from '../auth/auth.guard';
 
     @Patch(':id')
     async updateUser(
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @Body(ValidationPipe) updateUserDto: UpdateUserDto
     ) {
         return this.userService.updateUser(id, updateUserDto);
@@ -63,7 +63,7 @@ import { JwtAuthGuard } from '../auth/auth.guard';
 
     @Patch(':id/password')
     async updatePassword(
-        @Param('id') userId: number,
+        @Param('id', ParseIntPipe) userId: number,
         @Body() body: { oldPassword: string; newPassword: string }
     ) {
         return this.userService.updatePassword(
@@ -73,12 +73,12 @@ import { JwtAuthGuard } from '../auth/auth.guard';
         );
     }
     @Put('/:id/tickets')
-    async assignTicketToUser(@Param('id') id : number,@Body() assignTicketDto: AssignTicketDto){
+    async assignTicketToUser(@Param('id', ParseIntPipe) id : number,@Body() assignTicketDto: AssignTicketDto){
         return this.userService.assignTicketToUser(id, assignTicketDto.ticketId)
     }
 
     @Delete(':id')
-    async deleteUser(@Param('id') id: number) {
+    async deleteUser(@Param('id', ParseIntPipe) id: number) {
         return this.userService.deleteUser(id);
     }
 }

@@ -12,14 +12,17 @@ export class TicketController {
     constructor(private readonly ticketService: TicketService) {}
 
     @Get()
-    async getTickets(@Query('limit') limit=10, @Query('page') page=1 ) {
+    async getTickets(
+        @Query('limit', new ParseIntPipe({optional: true})) limit=10, 
+        @Query('page', new ParseIntPipe({optional: true})) page=1 
+    ) {
         return this.ticketService.getTickets(limit, page);
     }
 
     @Get('reports/ticket-count-by-user')
     async getTicketCountByUser(
-        @Query('limit') limit = 10,
-        @Query('page') page = 1,
+        @Query('limit', new ParseIntPipe({optional: true})) limit = 10,
+        @Query('page', new ParseIntPipe({optional: true})) page = 1,
         @Query('status') status: TicketStatus
     ) {
         return this.ticketService.getTicketCountByUser(limit, page, status);
@@ -41,7 +44,7 @@ export class TicketController {
     }
 
     @Patch('/:id')
-    async updateTicket(@Param('id') id: number, @Body(ValidationPipe) updateTicketDto: UpdateTicketDto) {
+    async updateTicket(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updateTicketDto: UpdateTicketDto) {
         return this.ticketService.updateTicket(id, updateTicketDto);
     }
 

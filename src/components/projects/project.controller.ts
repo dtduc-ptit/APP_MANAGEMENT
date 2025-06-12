@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Patch, Query, Delete, ParseIntPipe, ParseDatePipe,ValidationPipe, UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Patch, Query, Delete, ParseIntPipe, ParseDatePipe,ValidationPipe, UseGuards, Optional} from "@nestjs/common";
 import { ProjectService } from "./project.service";
 import { CreateProjectDto } from "../../common/dto/create-project.dto";
 import { UpdateProjectDto } from "../../common/dto/update-project.dto";
@@ -11,8 +11,8 @@ export class ProjectController {
 
     @Get('filter')
     async filterProjects(
-        @Query('limit') limit = 10, 
-        @Query('page') page = 1, 
+        @Query('limit', new ParseIntPipe({optional: true})) limit = 10, 
+        @Query('page', new ParseIntPipe({optional: true})) page = 1, 
         @Query('startDate', new ParseDatePipe({optional: true})) startDate?: Date,
         @Query('profit', ParseIntPipe) profit?: number,
     ) {
@@ -26,8 +26,8 @@ export class ProjectController {
 
     @Get()
     getProjects(
-        @Query('limit') limit = 10, 
-        @Query('page') page = 1, 
+        @Query('limit', new ParseIntPipe({optional: true})) limit = 10, 
+        @Query('page', new ParseIntPipe({optional: true})) page = 1, 
         @Query('name') projectName? : string, 
         @Query('projectType') projectType? : string
     ) {
@@ -50,7 +50,7 @@ export class ProjectController {
     }
     
     @Patch(':id')
-    updateProject(@Param('id') id: number, @Body() updateProjectDto: UpdateProjectDto) {
+    updateProject(@Param('id', ParseIntPipe) id: number, @Body() updateProjectDto: UpdateProjectDto) {
         return this.projectService.updateProject(id, updateProjectDto);
     }
 
@@ -61,8 +61,8 @@ export class ProjectController {
 
     @Get('reports/ticket-count')
     async getTicketCountByProject(
-        @Query('limit') limit = 10,
-        @Query('page') page = 1,
+        @Query('limit', new ParseIntPipe({optional: true})) limit = 10,
+        @Query('page', new ParseIntPipe({optional: true})) page = 1,
     ) {
         return this.projectService.getTicketCountByProject(limit, page);
     }
